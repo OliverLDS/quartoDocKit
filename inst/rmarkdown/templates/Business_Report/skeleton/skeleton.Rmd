@@ -1,0 +1,61 @@
+---
+title: 'Business Report Title'
+output:
+  bookdown::word_document2:
+    reference_docx: resources/word-styles_BusinessReport.docx
+# bibliography: references.bib
+csl: resources/apa7.csl
+---
+
+```{r setup, include=F}
+library(tidyverse)
+library(flextable)
+library(ftExtra)
+library(officedown)
+library(officer)
+knitr::opts_chunk$set(echo = F,
+                      ft.keepnext = F,
+                      warning=F,
+                      message=F,
+                      dpi=300,
+                      fig.width=7)
+knitr::knit_hooks$set(inline = function(x) {if(!is.numeric(x)){x}else{prettyNum(round(x,2), scientific=F, nsmall=2, big.mark=",")}})
+options(digits=10)
+
+select <- dplyr::select
+
+FitFlextableToPage <- function(ft, pgwidth = 6, adjust=c()){
+  ft_out <- ft %>% autofit()
+  if (length(adjust)==0) {
+    ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths))
+  } else {
+    ft_out <- width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable_dim(ft_out)$widths) + adjust) 
+  }
+  return(ft_out)
+}
+
+report_table <- function(ft) {
+  ft %>% 
+    theme_vanilla() %>%
+    italic(j=1) %>%
+    font(part='all', fontname='Times New Roman') %>%
+    fontsize(part='all', size=12) %>%
+    align(align='center', part='all') %>%
+    FitFlextableToPage()
+}
+  
+```
+
+# Executive Summary {-}
+
+\newpage
+
+
+
+\newpage
+
+# References {-}
+
+# Appendix {-}
+
+
